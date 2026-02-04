@@ -1,0 +1,120 @@
+-- ==============================
+-- BANCO DE DADOS: Faculdade
+-- ==============================
+
+DROP DATABASE IF EXISTS Faculdade;
+CREATE DATABASE Faculdade;
+USE Faculdade;
+
+-- ==============================
+-- REMOÇÃO DAS TABELAS (ORDEM CORRETA)
+-- ==============================
+
+DROP TABLE IF EXISTS Disciplina;
+DROP TABLE IF EXISTS Professor;
+DROP TABLE IF EXISTS Departamento;
+DROP TABLE IF EXISTS Aluno;
+
+-- ==============================
+-- TABELA: Departamento
+-- ==============================
+
+CREATE TABLE Departamento (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    local VARCHAR(255),
+    id_professor_chefe VARCHAR(14),
+    CONSTRAINT fk_chefe FOREIGN KEY (id_professor_chefe)
+        REFERENCES Professor(cpf)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+-- ==============================
+-- TABELA: Professor
+-- ==============================
+
+CREATE TABLE Professor (
+    cpf VARCHAR(14) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    inicio_contrato DATE,
+    id_depto INT,
+    CONSTRAINT fk_prof_depto FOREIGN KEY (id_depto)
+        REFERENCES Departamento(id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+-- ==============================
+-- TABELA: Disciplina
+-- ==============================
+
+CREATE TABLE Disciplina (
+    id_disciplina INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    carga_horaria INT DEFAULT 40,
+    cpf_professor VARCHAR(14),
+    CONSTRAINT fk_disc_prof FOREIGN KEY (cpf_professor)
+        REFERENCES Professor(cpf)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+-- ==============================
+-- TABELA: Aluno
+-- ==============================
+
+CREATE TABLE Aluno (
+    matricula VARCHAR(20) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    data_nascimento DATE,
+    endereco VARCHAR(255)
+);
+
+-- ==============================
+-- INSERÇÃO DE DADOS
+-- ==============================
+
+INSERT INTO Departamento (id, nome, local) VALUES
+(1, 'Exatas e Tecnologia', 'Bloco A - Andar 2'),
+(2, 'Ciências Biológicas', 'Bloco B - Andar 1'),
+(3, 'Ciências Humanas', 'Bloco C - Térreo');
+
+INSERT INTO Professor (cpf, nome, inicio_contrato, id_depto) VALUES
+('111.111.111-11', 'Alan Turing', '2010-03-15', 1),
+('222.222.222-22', 'Ada Lovelace', '2012-05-20', 1),
+('333.333.333-33', 'Charles Darwin', '2015-08-10', 2),
+('444.444.444-44', 'Marie Curie', '2018-02-01', 2),
+('555.555.555-55', 'Hannah Arendt', '2014-11-30', 3);
+
+UPDATE Departamento SET id_professor_chefe = '111.111.111-11' WHERE id = 1;
+UPDATE Departamento SET id_professor_chefe = '444.444.444-44' WHERE id = 2;
+UPDATE Departamento SET id_professor_chefe = '555.555.555-55' WHERE id = 3;
+
+INSERT INTO Aluno (matricula, nome, data_nascimento, endereco) VALUES
+('MAT001', 'João Silva', '2001-01-10', 'Rua das Flores, 10'),
+('MAT002', 'Maria Oliveira', '1999-12-05', 'Av. Central, 500'),
+('MAT003', 'Carlos Souza', '2002-03-22', 'Rua Bahia, 12'),
+('MAT004', 'Ana Costa', '2000-07-14', 'Travessa da Paz, 5'),
+('MAT005', 'Pedro Santos', '2003-09-30', 'Rua de Trás, 99');
+
+INSERT INTO Disciplina (nome, carga_horaria, cpf_professor) VALUES
+('Algoritmos', 80, '111.111.111-11'),
+('Cálculo I', 60, '222.222.222-22'),
+('Genética', 40, '333.333.333-33'),
+('Física Nuclear', 60, '444.444.444-44'),
+('Filosofia Política', 40, '555.555.555-55');
+
+-- ==============================
+-- CONSULTAS DE VERIFICAÇÃO
+-- ==============================
+
+SELECT P.nome AS Professor, D.nome AS Departamento
+FROM Professor P
+JOIN Departamento D ON P.id_depto = D.id;
+
+SELECT D.nome AS Disciplina, P.nome AS Professor
+FROM Disciplina D
+JOIN Professor P ON D.cpf_professor = P.cpf;
+
+SELECT * FROM Aluno ORDER BY nome;
