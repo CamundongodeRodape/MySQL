@@ -1,24 +1,10 @@
--- ==============================
--- BANCO DE DADOS: Faculdade
--- ==============================
-
 DROP DATABASE IF EXISTS Faculdade;
 CREATE DATABASE Faculdade;
 USE Faculdade;
-
--- ==============================
--- REMOÇÃO DAS TABELAS (ORDEM CORRETA)
--- ==============================
-
 DROP TABLE IF EXISTS Disciplina;
 DROP TABLE IF EXISTS Professor;
 DROP TABLE IF EXISTS Departamento;
 DROP TABLE IF EXISTS Aluno;
-
--- ==============================
--- TABELA: Departamento
--- ==============================
-
 CREATE TABLE Departamento (
     id INT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -29,11 +15,6 @@ CREATE TABLE Departamento (
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
-
--- ==============================
--- TABELA: Professor
--- ==============================
-
 CREATE TABLE Professor (
     cpf VARCHAR(14) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -44,11 +25,6 @@ CREATE TABLE Professor (
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
-
--- ==============================
--- TABELA: Disciplina
--- ==============================
-
 CREATE TABLE Disciplina (
     id_disciplina INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -59,22 +35,12 @@ CREATE TABLE Disciplina (
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
-
--- ==============================
--- TABELA: Aluno
--- ==============================
-
 CREATE TABLE Aluno (
     matricula VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     data_nascimento DATE,
     endereco VARCHAR(255)
 );
-
--- ==============================
--- INSERÇÃO DE DADOS
--- ==============================
-
 INSERT INTO Departamento (id, nome, local) VALUES
 (1, 'Exatas e Tecnologia', 'Bloco A - Andar 2'),
 (2, 'Ciências Biológicas', 'Bloco B - Andar 1'),
@@ -104,10 +70,6 @@ INSERT INTO Disciplina (nome, carga_horaria, cpf_professor) VALUES
 ('Genética', 40, '333.333.333-33'),
 ('Física Nuclear', 60, '444.444.444-44'),
 ('Filosofia Política', 40, '555.555.555-55');
-
--- ==============================
--- CONSULTAS DE VERIFICAÇÃO
--- ==============================
 
 SELECT P.nome AS Professor, D.nome AS Departamento
 FROM Professor P
